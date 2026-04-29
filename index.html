@@ -168,13 +168,14 @@
   // ─── Tampilkan tombol store ────────────────────────────────
   const btnStore = document.getElementById('btnStore');
   btnStore.href = storeUrl;
-
   // ─── Fungsi buka deep link ─────────────────────────────────
   function openApp() {
     const deepLink = code
       ? `sakudua://invite/${code}`
       : 'sakudua://home';
 
+console.log('Invite code:', code); // debug: pastikan code terbaca'
+console.log('Store URL:', deepLink); // debug: pastikan URL store benar
     const status = document.getElementById('status');
     status.innerHTML = '<span class="spinner"></span>Membuka aplikasi...';
 
