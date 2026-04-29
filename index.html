@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SakuDua – Buka Undangan</title>
+
+  <!-- OG tags biar preview WA cantik -->
+  <meta property="og:title" content="Kamu diundang ke SakuDua!" />
+  <meta property="og:description" content="Tap untuk membuka undangan di aplikasi SakuDua." />
+  <meta property="og:image" content="https://placehold.co/600x315/1a1a2e/ffffff?text=SakuDua" />
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #00c896;
+      --green-dark: #00a57a;
+      --bg: #f0faf6;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 24px;
+      box-shadow: 0 8px 40px rgba(0,200,150,0.12), 0 2px 8px rgba(0,0,0,0.06);
+      padding: 48px 36px 40px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      animation: slideUp 0.5s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .icon {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, #00c896, #00a57a);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 36px;
+      box-shadow: 0 4px 20px rgba(0,200,150,0.35);
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      text-decoration: none;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00c896, #00a57a);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(0,200,150,0.4);
+      margin-bottom: 12px;
+    }
+
+    .btn-primary:hover { box-shadow: 0 6px 28px rgba(0,200,150,0.5); }
+
+    .btn-secondary {
+      background: #f3f4f6;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover { background: #e5e7eb; }
+
+    .status {
+      margin-top: 24px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      min-height: 20px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid #d1fae5;
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">💰</div>
+  <h1>Kamu Diundang!</h1>
+  <p class="subtitle">Seseorang mengundangmu untuk bergabung di <strong>SakuDua</strong>. Tap tombol di bawah untuk membuka undangan.</p>
+
+  <button class="btn btn-primary" id="btnOpen" onclick="openApp()">
+    Buka di Aplikasi SakuDua
+  </button>
+
+  <a class="btn btn-secondary" id="btnStore" href="#" style="display:none">
+    Download SakuDua
+  </a>
+
+  <p class="status" id="status"></p>
+</div>
+
+<script>
+  // ─── Ambil invite code dari URL ────────────────────────────
+  // Contoh URL: https://username.github.io/sakudua-invite/?code=ABC123
+  const params  = new URLSearchParams(window.location.search);
+  const code    = params.get('code') || '';
+
+  // ─── Store URLs (isi kalau udah ada) ───────────────────────
+  const PLAY_STORE = 'https://play.google.com/store/apps/details?id=com.sakudua.app';
+  const APP_STORE  = 'https://apps.apple.com/app/sakudua'; // ganti dengan ID asli
+
+  // ─── Detect platform ───────────────────────────────────────
+  const ua       = navigator.userAgent;
+  const isIOS    = /iPad|iPhone|iPod/.test(ua);
+  const isAndroid = /Android/.test(ua);
+
+  const storeUrl = isIOS ? APP_STORE : PLAY_STORE;
+
+  // ─── Tampilkan tombol store ────────────────────────────────
+  const btnStore = document.getElementById('btnStore');
+  btnStore.href = storeUrl;
+
+  // ─── Fungsi buka deep link ─────────────────────────────────
+  function openApp() {
+    const deepLink = code
+      ? `sakuduapps://invite/${code}`
+      : 'sakuduapps://home';
+
+    const status = document.getElementById('status');
+    status.innerHTML = '<span class="spinner"></span>Membuka aplikasi...';
+
+    // Coba buka deep link
+    window.location.href = deepLink;
+
+    // Fallback: kalau app gak kebuka dalam 2.5 detik, tampilkan tombol download
+    setTimeout(() => {
+      status.textContent = 'Aplikasi tidak terdeteksi. Silakan download terlebih dahulu.';
+      btnStore.style.display = 'block';
+    }, 2500);
+  }
+
+  // ─── Auto-open kalau ada code di URL ──────────────────────
+  if (code) {
+    setTimeout(openApp, 800); // sedikit delay biar halaman kerender dulu
+  }
+</script>
+</body>
+</html>
