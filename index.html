@@ -172,8 +172,8 @@
   // ─── Fungsi buka deep link ─────────────────────────────────
   function openApp() {
     const deepLink = code
-      ? `sakuduapps://invite/${code}`
-      : 'sakuduapps://home';
+      ? `sakuduapp://invite/${code}`
+      : 'sakuduapp://home';
 
     const status = document.getElementById('status');
     status.innerHTML = '<span class="spinner"></span>Membuka aplikasi...';
