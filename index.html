@@ -153,7 +153,7 @@
   // Contoh URL: https://username.github.io/sakudua-invite/?code=ABC123
   const params  = new URLSearchParams(window.location.search);
   const code    = params.get('code') || '';
-
+  console.log('Invite code:', code); // debug: pastikan code terbaca
   // ─── Store URLs (isi kalau udah ada) ───────────────────────
   const PLAY_STORE = 'https://play.google.com/store/apps/details?id=com.sakudua.app';
   const APP_STORE  = 'https://apps.apple.com/app/sakudua'; // ganti dengan ID asli
